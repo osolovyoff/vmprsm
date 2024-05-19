@@ -1,0 +1,22 @@
+name: Vampirism
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup projects, branches and Token
+        run: echo Hello, world!
+      - name: Suck to
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
