@@ -12,6 +12,11 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+
+    - name: Setup Git Config
+      run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
       
     - name: List repositories and branches
       run: |
@@ -28,6 +33,9 @@ jobs:
     - name: Clone target repository
       uses: actions/checkout@v2
       with:
+        # https://github.com/settings/tokens
+        # Settings -> Developer Settings -> Personal access tokens
+        # repo, workflow, write:packages, admin:repo_hook, admin:org_hook, gist, project 
         repository: your_username/your_target_repository
         token: ${{ secrets.VAMP }}
         
