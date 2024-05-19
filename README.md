@@ -5,7 +5,7 @@
  █    █ █  █ █   █ █     
   █  █     █    █   █    
    █▐     █    ▀     ▀   
-   ▐     ▀               ```
+   ▐     ▀               
 
 Welcome to **Vampire**, a powerful tool designed to clone private repositories and seamlessly transfer their code to any other repository via CI/CD pipelines. With **Vampire**, you can manage and duplicate your projects effortlessly.
 
