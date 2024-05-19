@@ -7,6 +7,7 @@
    █▐     █    ▀     ▀   
    ▐     ▀               
 
+
 Welcome to **Vampire**, a powerful tool designed to clone private repositories and seamlessly transfer their code to any other repository via CI/CD pipelines. With **Vampire**, you can manage and duplicate your projects effortlessly.
 
 ## Features
@@ -31,11 +32,22 @@ To get started with **Vampire**, follow these steps:
 4. **Run Pipeline:** Execute the pipeline to start the cloning and transferring process.
 
 ## Prerequisites
-
-- **GitHub Account:** Ensure you have a GitHub account with access to the repositories you wish to clone.
-- **CI/CD Tool:** Use any CI/CD tool of your choice (GitHub Actions, GitLab CI, Jenkins, etc.).
-- **Permissions:** Make sure **Vampire** has the necessary permissions to read from and write to your repositories.
-
+[Settings -> Developer Settings -> Personal access tokens](https://github.com/settings/tokens)
+- [x] repo:status - Access commit status
+   - [x] repo_deployment - Access deployment status
+   - [x] public_repo - Access public repositories
+   - [x] repo:invite - Access repository invitations
+   - [x] security_events - Read and write security events
+- [x] workflow - Update GitHub Action workflows
+- [x] write:packages - Upload packages to GitHub Package Registry
+   - [x] read:packages - Download packages from GitHub Package Registry
+- [x] admin:repo_hook - Write repository hooks
+   - [x] write:repo_hook - Write repository hooks
+   - [x] read:repo_hook - Read repository hooks
+- [x] admin:org_hook - Full control of organization hooks
+- [x] gist - Create gists
+- [x] project - Full control of projects
+   - [x] read:project - Read access of projects
 
 Feel free to customize the content and CI/CD configuration according to your specific needs and preferences.
 
