@@ -6,7 +6,7 @@
   █  █     █    █   █    
    █▐     █    ▀     ▀   
    ▐     ▀               
-
+```
 
 Welcome to **Vampire**, a powerful tool designed to clone private repositories and seamlessly transfer their code to any other repository via CI/CD pipelines. With **Vampire**, you can manage and duplicate your projects effortlessly.
 
@@ -51,3 +51,44 @@ To get started with **Vampire**, follow these steps:
 
 Feel free to customize the content and CI/CD configuration according to your specific needs and preferences.
 
+## Configuring blank
+
+``` 
+    - cron: '0 0 * * *' # performs a backup every day at midnight.
+```
+
+The cron syntax is structured as follows:
+
+```
+
+ ┌───────────── minute (0-59)
+ │ ┌───────────── hour (0-23)
+ │ │ ┌───────────── day of the month (1-31)
+ │ │ │ ┌───────────── month (1-12)
+ │ │ │ │ ┌───────────── day of the week (0-6) (Sunday through Saturday)
+ │ │ │ │ │ 
+ │ │ │ │ │
+ * * * * * 
+```
+
+```
+repository: 'your_username/your_target_repository'
+token: ${{ secrets.VAMP }}
+ref: 'main'
+```
+repository: Replace your_username/your_target_repository with the repository you want to upload to.
+Example:
+```
+repository: 'user/repo1'
+```
+token: Replace VAMP with the name of the secret key stored in the repository.
+ref: Replace main with the branch you want to upload to.
+
+## repositories.txt
+The repositories.txt file should contain a list of repositories and branches to be cloned and copied. Each line of the file should contain the repository URL and branch name separated by a space. Here is an example of what repositories.txt might look like:
+
+```
+https://github.com/user/repo1.git main
+https://github.com/user/repo2.git develop
+https://github.com/user/repo3.git feature-branch
+```

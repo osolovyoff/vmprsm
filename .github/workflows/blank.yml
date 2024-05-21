@@ -1,9 +1,9 @@
 name: Vampirism
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
 
 jobs:
   copy_repositories:
@@ -17,36 +17,55 @@ jobs:
       run: |
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
-      
-    - name: List repositories and branches
-      run: |
-        echo "Repository: REPO1, Branch: main" >> repositories.txt
-        echo "Repository: REPO2, Branch: dev" >> repositories.txt
-        # Добавьте другие репозитории и ветки по необходимости
         
-    - name: Create files with repository and branch info
-      run: |
-        ls
-        mkdir files
-        cp repositories.txt files/
-        
-    - name: Clone target repository
+    - name: Checkout destination repository
       uses: actions/checkout@v2
       with:
-        # https://github.com/settings/tokens
-        # Settings -> Developer Settings -> Personal access tokens
-        # repo, workflow, write:packages, admin:repo_hook, admin:org_hook, gist, project 
-        repository: your_username/your_target_repository
+        repository: 'your_username/your_target_repository'
         token: ${{ secrets.VAMP }}
+        path: 'home'
+        ref: 'main'
         
-    - name: Copy files to target repository
+    - name: Clone and copy repositories
       run: |
-        cp -r files/* your_target_repository/
+        if [ ! -f repositories.txt ]; then
+          echo "repositories.txt not found!"
+          exit 1
+        fi
+        while IFS= read -r line || [ -n "$line" ]; do
+          repo_url=$(echo "$line" | cut -d' ' -f1)
+          branch=$(echo "$line" | cut -d' ' -f2)
+          repo_name=$(basename "$repo_url" .git)
+          if [ -d "$repo_name" ]; then
+            cd "$repo_name"
+            git pull origin "$branch" || { echo "Failed to pull $repo_url"; exit 1; }
+            cd ..
+          else
+            git clone --branch "$branch" "$repo_url" "$repo_name" || { echo "Failed to clone $repo_url"; exit 1; }
+          fi
+          rm -rf "$repo_name/.git"
+          mkdir -p "./home/$repo_name"
+          cp -r "$repo_name/." "./home/$repo_name/" || { echo "Failed to copy files from $repo_name"; exit 1; }
+        done < repositories.txt
         
+    - name: Check for changes
+      id: check-changes
+      run: |
+        cd home
+        git add .
+        if git diff --cached --quiet; then
+          echo "No changes detected"
+          echo "changed=false" >> $GITHUB_ENV
+        else
+          echo "Changes detected"
+          echo "changed=true" >> $GITHUB_ENV
+        fi
+
     - name: Commit and push changes
+      if: env.changed == 'true'
       run: |
-        cd your_target_repository
-        git config --global user.email "you@example.com"
+        cd home
+        git config --global user.email "action@github.com"
         git config --global user.name "GitHub Action"
         git add .
         git commit -m "Add repository and branch info"
